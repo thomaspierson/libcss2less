@@ -1,4 +1,3 @@
-#!/usr/bin/ruby
 
 module Css2Less
   
@@ -51,9 +50,3 @@ module Css2Less
   end
   
 end
-
-css = File.read(ARGV[0])
-
-converter = Css2Less::Converter.new(css)
-converter.generate
-converter.print
