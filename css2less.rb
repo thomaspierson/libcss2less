@@ -8,6 +8,7 @@ module Css2Less
     def initialize(css)
       @css = css
       @tree = {}
+      @less = ''
     end
     
     def add_rule(tree, selectors, style)
@@ -21,7 +22,7 @@ module Css2Less
       end
     end
     
-    def generate
+    def generate_tree
       @css.split("\n").map { |l| l.strip }.join.gsub(/\/\*+[^\*]*\*+\//, '').split(/[\{\}]/).each_slice(2) do |style|
 	rules = style[0].strip
 	if rules.include?(',') # leave multiple rules alone
@@ -32,19 +33,23 @@ module Css2Less
       end
     end
     
-    def print(tree=nil, indent=0)
+    def render_less(tree=nil, indent=0)
       if tree.nil?
 	tree = @tree
       end
       tree.each do |element, children|
-	puts ' ' * indent + element + " {\n"
+	@less = @less + ' ' * indent + element + " {\n"
 	style = children.delete(:style)
 	if style
-	  puts style.split(';').map { |s| s.strip }.reject { |s| s.empty? }.map { |s| ' ' * (indent+2) + s + ';' }.join("\n")
+	  @less = @less + style.split(';').map { |s| s.strip }.reject { |s| s.empty? }.map { |s| ' ' * (indent+2) + s + ';' }.join("\n")
 	end
-	print(children, indent + 2)
-	puts ' ' * indent + "}\n"
+	render_less(children, indent + 2)
+	@less = @less + ' ' * indent + "}\n"
       end
+    end
+    
+    def get_less
+      return @less
     end
     
   end
