@@ -1,31 +1,9 @@
-css2less
-===
+libcss2less
+=============
 
-Turns this
+A ruby library which convert old less into less.
+Based on css2less script initially written by sickill.
 
-    #foo {
-      color: red;
-    }
-    #foo a {
-      color: blue;
-    }
+--
+Author : Thomas Pierson
 
-Into this
-
-    #foo {
-      color: red;
-      a {
-        color: blue;
-      }
-    }
-    
-Installation
-===
-
-    sudo wget https://raw.github.com/sickill/css2less/master/css2less.rb -O /usr/local/bin/css2less
-    sudo chmod a+x /usr/local/bin/css2less
-
-Usage
-===
-
-    css2less style.css > style.less
