@@ -11,6 +11,30 @@ module Css2Less
       @less = ''
     end
     
+    def process_less
+      if @css.empty?
+	return false
+      end
+      cleanup
+      generate_tree
+      render_less
+    end
+    
+    def get_less
+      return @less
+    end
+    
+    def set_css(css)
+      @css = css
+    end
+    
+    private
+    
+    def cleanup
+      @tree = {}
+      @less = ''
+    end
+    
     def add_rule(tree, selectors, style)
       return if style.nil? || style.empty?
       if selectors.empty?
@@ -46,10 +70,6 @@ module Css2Less
 	render_less(children, indent + 2)
 	@less = @less + ' ' * indent + "}\n"
       end
-    end
-    
-    def get_less
-      return @less
     end
     
   end
