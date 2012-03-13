@@ -5,19 +5,22 @@ module Css2Less
   
   class Converter
     
-    def initialize(css)
-      @css = css
+    def initialize(css=nil)
+      if not css.nil?
+	@css = css
+      end
       @tree = {}
       @less = ''
     end
     
     def process_less
-      if @css.empty?
+      if @css.nil?
 	return false
       end
       cleanup
       generate_tree
       render_less
+      return true
     end
     
     def get_less
