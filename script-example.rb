@@ -1,6 +1,6 @@
 #!/usr/bin/ruby
 
-require 'css2less'
+require './css2less'
 
 css = File.read(ARGV[0])
 
