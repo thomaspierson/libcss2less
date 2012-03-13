@@ -68,7 +68,7 @@ module Css2Less
 	@less = @less + ' ' * indent + element + " {\n"
 	style = children.delete(:style)
 	if style
-	  @less = @less + style.split(';').map { |s| s.strip }.reject { |s| s.empty? }.map { |s| ' ' * (indent+4) + s + ";" }.join("\n")
+	  @less = @less + style.split(';').map { |s| s.strip }.reject { |s| s.empty? }.map { |s| ' ' * (indent+4) + s + ";" }.join("\n") + "\n"
 	end
 	render_less(children, indent + 4)
 	@less = @less + ' ' * indent + "}\n"
