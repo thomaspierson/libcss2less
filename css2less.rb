@@ -14,10 +14,13 @@ module Css2Less
     end
     
     def process_less
+      cleanup
       if @css.nil?
 	return false
       end
-      cleanup
+      if @css.empty?
+	return false
+      end
       generate_tree
       render_less
       return true
