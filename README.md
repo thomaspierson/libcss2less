@@ -1,9 +1,9 @@
-libcss2less
-=============
+Css2Less Library
+================
 
-A ruby library which convert old less into less.
-Based on css2less script initially written by sickill.
+A ruby library which convert old CSS stylesheet into LESS dynamic stylesheet.
 
---
-Author : Thomas Pierson
+Based on css2less script initially written by Marcin Kulik.
+
+Refactored and Gemified by Thomas Pierson.
 
