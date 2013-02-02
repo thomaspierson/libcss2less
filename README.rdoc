@@ -1,0 +1,26 @@
+= Css2Less
+
+* {Homepage}[https://github.com/thomaspierson/libcss2less]
+* {Documentation}[http://rubydoc.info/gems/css2less/frames]
+* {Email}[mailto:contact@thomaspierson.fr]
+
+== Description
+
+A ruby library which convert old CSS stylesheet into LESS dynamic stylesheet.
+Based on css2less script initially written by Marcin Kulik.
+Refactored and Gemified by Thomas Pierson.
+
+== Simple usage
+
+  css2less myfile.css > myfile.less
+
+== Install
+
+  $ gem install css2less
+
+== Copyright
+
+See COPYING for details.
+
+
+That's all folks !

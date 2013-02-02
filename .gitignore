@@ -1,3 +1,5 @@
 *.css
 *~
 .project
+/html/
+/pkg/
