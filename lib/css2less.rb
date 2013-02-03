@@ -71,11 +71,18 @@ module Css2Less
     def generate_tree
       @css.split("\n").map { |l| l.strip }.join.gsub(/\/\*+[^\*]*\*+\//, '').split(/[\{\}]/).each_slice(2) do |style|
         rules = style[0].strip
+        # handle child selector case - step1
+        if rules.include?('>')
+          rules = rules.gsub(/\s*>\s*/, ' &>')
+        end
         # leave multiple rules alone
         if rules.include?(',')
           add_rule(@tree, [rules], style[1])
         else
-          add_rule(@tree, rules.split(/\s+/), style[1])
+          rules_split = rules.split(/\s+/)
+          # handle child selector case - step2
+          rules_split.map! {|rule| rule.gsub('&>', '& > ')}
+          add_rule(@tree, rules_split, style[1])
         end
       end
     end

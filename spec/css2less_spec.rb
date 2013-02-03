@@ -31,4 +31,30 @@ EOF
     converter.get_less.should eq(less)
   end
 
+  it "should correctly handle css child selectors" do
+    css = <<EOF
+body .navbar .nav > li > a {
+  color: #333;
+  font-weight: bold;
+}
+EOF
+    less = <<EOF
+body {
+    .navbar {
+        .nav {
+            & > li {
+                & > a {
+                    color: #333;
+                    font-weight: bold;
+                }
+            }
+        }
+    }
+}
+EOF
+    converter = Css2Less::Converter.new(css)
+    converter.process_less
+    converter.get_less.should eq(less)
+  end
+
 end
