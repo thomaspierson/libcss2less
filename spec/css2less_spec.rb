@@ -57,4 +57,40 @@ EOF
     converter.get_less.should eq(less)
   end
 
+  it "should correctly handle css @import rules" do
+    css = <<EOF
+@import "style1.css";
+@import "style2.css";
+
+@import "style3.css";
+
+#hello {
+    color: blue;
+}
+
+@import "style4.css";
+
+#hello #buddy {
+    background: red;
+}
+@import "style5.css";
+EOF
+    less = <<EOF
+@import "style1.css";
+@import "style2.css";
+@import "style3.css";
+@import "style4.css";
+@import "style5.css";
+#hello {
+    color: blue;
+    #buddy {
+        background: red;
+    }
+}
+EOF
+    converter = Css2Less::Converter.new(css)
+    converter.process_less
+    converter.get_less.should eq(less)
+  end
+
 end

@@ -75,6 +75,11 @@ module Css2Less
         if rules.include?('>')
           rules = rules.gsub(/\s*>\s*/, ' &>')
         end
+        if rules.include?("@import")
+          import_rule = rules.match(/@import.*;/)[0]
+          rules = rules.gsub(/@import.*;/, '')
+          add_rule(@tree, [], import_rule)
+        end
         # leave multiple rules alone
         if rules.include?(',')
           add_rule(@tree, [rules], style[1])
@@ -92,13 +97,17 @@ module Css2Less
       tree = @tree
       end
       tree.each do |element, children|
-        @less = @less + ' ' * indent + element + " {\n"
-        style = children.delete(:style)
-        if style
-          @less = @less + style.split(';').map { |s| s.strip }.reject { |s| s.empty? }.map { |s| ' ' * (indent+4) + s + ";" }.join("\n") + "\n"
+        if element == :style
+          @less = @less + children.split(';').map { |s| s.strip }.reject { |s| s.empty? }.map { |s| s + ";" }.join("\n") + "\n"
+        else
+          @less = @less + ' ' * indent + element + " {\n"
+          style = children.delete(:style)
+          if style
+            @less = @less + style.split(';').map { |s| s.strip }.reject { |s| s.empty? }.map { |s| ' ' * (indent+4) + s + ";" }.join("\n") + "\n"
+          end
+          render_less(children, indent + 4)
+          @less = @less + ' ' * indent + "}\n"
         end
-        render_less(children, indent + 4)
-        @less = @less + ' ' * indent + "}\n"
       end
     end
 
