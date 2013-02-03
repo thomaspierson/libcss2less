@@ -92,5 +92,41 @@ EOF
     converter.process_less
     converter.get_less.should eq(less)
   end
+  
+  it "should correctly handle @font-face rules" do
+    css = <<EOF
+@font-face {
+  font-family: 'MyWebFont';
+  src: url('webfont.eot'); /* IE9 Compat Modes */
+  src: url('webfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('webfont.woff') format('woff'), /* Modern Browsers */
+       url('webfont.ttf')  format('truetype'), /* Safari, Android, iOS */
+       url('webfont.svg#svgFontName') format('svg'); /* Legacy iOS */
+}
 
+#hello {
+    color: blue;
+}
+
+#hello #buddy {
+    background: red;
+}
+EOF
+    less = <<EOF
+@font-face {
+    font-family: 'MyWebFont';
+    src: url('webfont.eot');
+    src: url('webfont.eot?#iefix') format('embedded-opentype'), url('webfont.woff') format('woff'), url('webfont.ttf')  format('truetype'), url('webfont.svg#svgFontName') format('svg');
+}
+#hello {
+    color: blue;
+    #buddy {
+        background: red;
+    }
+}
+EOF
+    converter = Css2Less::Converter.new(css)
+    converter.process_less
+    converter.get_less.should eq(less)
+  end
 end
