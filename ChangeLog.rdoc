@@ -1,3 +1,9 @@
+=== 0.0.2 / 2013-02-03
+
+* implement a new test to check if css @font-face rules are correctly handled
+* fix: correctly handle css @import rules ( #10 )
+* fix: correctly handle css child selectors ( #12 )
+
 === 0.0.1 / 2013-02-02
 
 * Reformat the source code using Ruby conventions.
