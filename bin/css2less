@@ -1,9 +1,36 @@
 #!/usr/bin/env ruby
 
+require 'optparse'
 require 'css2less'
 
+options = {}
+parser = OptionParser.new do |opts|
+  opts.banner = "Usage: css2less [options] filename"
+
+  opts.on("-c", "--colors", "Automatically extract colors from less") do |v|
+    options[:update_colors] = v
+  end
+
+  opts.on("-m", "--mixins", "Automatically extract vendor prefixed mixins") do |v|
+    options[:vendor_mixins] = v
+  end  
+
+  opts.on_tail("-h", "--help", "Show this message") do
+    puts opts
+    exit
+  end
+
+end
+
+parser.parse!
+
+if ARGV.empty?
+  puts parser
+  exit
+end
+ 
 css = File.read(ARGV[0])
 
-converter = Css2Less::Converter.new(css)
+converter = Css2Less::Converter.new(css, options)
 converter.process_less
 puts converter.get_less
