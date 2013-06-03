@@ -129,4 +129,132 @@ EOF
     converter.process_less
     converter.get_less.should eq(less)
   end
+
+  it "should convert basic css colors into global variables" do
+    css = <<EOF
+#hello {
+    color: blue;
+}
+
+#hello #buddy {
+    background: red;
+    color: #333;
+}
+
+p {
+  color: rgb(1,1,1);
+  border: 1px dotted #e4e9f0;
+}
+EOF
+    less = <<EOF
+@color0: blue;
+@color1: red;
+@color2: #333;
+@color3: rgb(1,1,1);
+@color4: #e4e9f0;
+
+#hello {
+    color: @color0;
+    #buddy {
+        background: @color1;
+        color: @color2;
+    }
+}
+p {
+    color: @color3;
+    border: 1px dotted @color4;
+}
+EOF
+    converter = Css2Less::Converter.new(css, {:update_colors => true})
+    converter.process_less
+    converter.get_less.should eq(less)
+  end
+
+  it "should generate appropriate vendor mixins" do
+    css = <<EOF
+.thumbnail-kenburn img {
+  left:10px;
+  margin-left:-10px;
+  position:relative;
+   -webkit-transition: all 0.8s ease-in-out;
+   -moz-transition: all 0.8s ease-in-out;
+   -o-transition: all 0.8s ease-in-out;
+   -ms-transition: all 0.8s ease-in-out;
+   transition: all 0.8s ease-in-out;
+}
+.thumbnail-kenburn:hover img {
+   -webkit-transform: scale(1.2) rotate(2deg);
+   -moz-transform: scale(1.2) rotate(2deg);
+   -o-transform: scale(1.2) rotate(2deg);
+   -ms-transform: scale(1.2) rotate(2deg);
+   transform: scale(1.2) rotate(2deg);
+}
+ 
+/*Welcome Block*/
+.service-block .span4 {
+  padding:20px 30px;
+  text-align:center;
+  color: red;
+  margin-bottom:20px;
+  border-radius:2px;
+    -webkit-transition:all 0.3s ease-in-out;
+    -moz-transition:all 0.3s ease-in-out;
+    -o-transition:all 0.3s ease-in-out;
+    transition:all 0.3s ease-in-out;
+}
+EOF
+
+    less = <<EOF
+@color0: red;
+
+.vp-transition(@p0; @p1; @p2) {
+    -moz-transition: @p0 @p1 @p2;
+    -o-transition: @p0 @p1 @p2;
+    -ms-transition: @p0 @p1 @p2;
+    -webkit-transition: @p0 @p1 @p2;
+    transition: @p0 @p1 @p2;
+}
+.vp-transform(@p0; @p1) {
+    -moz-transform: @p0 @p1;
+    -o-transform: @p0 @p1;
+    -ms-transform: @p0 @p1;
+    -webkit-transform: @p0 @p1;
+    transform: @p0 @p1;
+}
+
+.thumbnail-kenburn {
+    img {
+        left: 10px;
+        margin-left: -10px;
+        position: relative;
+        .vp-transition(all;
+        0.8s;
+        ease-in-out);
+    }
+}
+.thumbnail-kenburn:hover {
+    img {
+        .vp-transform(scale(1.2);
+        rotate(2deg));
+    }
+}
+.service-block {
+    .span4 {
+        padding: 20px 30px;
+        text-align: center;
+        color: @color0;
+        margin-bottom: 20px;
+        border-radius: 2px;
+        .vp-transition(all;
+        0.3s;
+        ease-in-out);
+    }
+}
+EOF
+
+    converter = Css2Less::Converter.new(css, {:update_colors => true, :vendor_mixins => true})
+    converter.process_less
+    converter.get_less.should eq(less)
+
+  end
 end
